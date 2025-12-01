@@ -172,7 +172,7 @@ const doLogin = async () => {
 </script>
 
 <template>
-  <ForumPage v-if="currentPage === 'forum'" @back="openHome" @request-login="triggerLogin" />
+  <ForumPage v-if="currentPage === 'forum'" @back="openHome" @request-login="triggerLogin" :user="user" />
   <div v-else class="site">
     <header class="masthead">
       <div class="logo-lockup">
@@ -347,19 +347,20 @@ const doLogin = async () => {
       <p>© 2025 Wardrobe Studio · Inspired by Return to Future 1999</p>
       <small>提醒：适度游戏益脑，沉迷游戏伤身。</small>
     </footer>
-
-    <div v-if="showLogin" class="modal-mask">
-      <div class="modal">
-        <h3>账号密码登录</h3>
-        <div class="form">
-          <input v-model="loginForm.username" placeholder="用户名" />
-          <input v-model="loginForm.password" placeholder="密码" type="password" />
-        </div>
-        <p v-if="loginError" class="error">{{ loginError }}</p>
-        <div class="actions">
-          <button class="btn primary" :disabled="loginLoading" @click="doLogin">{{ loginLoading ? '登录中...' : '登录' }}</button>
-          <button class="btn ghost" @click="closeLogin">取消</button>
-        </div>
+  </div>
+  
+  <!-- 登录弹窗，移到外层确保在所有页面都能显示 -->
+  <div v-if="showLogin" class="modal-mask">
+    <div class="modal">
+      <h3>账号密码登录</h3>
+      <div class="form">
+        <input v-model="loginForm.username" placeholder="用户名" />
+        <input v-model="loginForm.password" placeholder="密码" type="password" />
+      </div>
+      <p v-if="loginError" class="error">{{ loginError }}</p>
+      <div class="actions">
+        <button class="btn primary" :disabled="loginLoading" @click="doLogin">{{ loginLoading ? '登录中...' : '登录' }}</button>
+        <button class="btn ghost" @click="closeLogin">取消</button>
       </div>
     </div>
   </div>
