@@ -103,6 +103,29 @@ onBeforeUnmount(() => {
   window.removeEventListener('hashchange', applyRoute)
 })
 
+// 页面加载时恢复用户状态
+onMounted(async () => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    try {
+      // 调用API获取用户信息
+      const res = await fetch('/login/userInfo', {
+        headers: { 'UserToken': token }
+      })
+      const json = await res.json()
+      if (json && json.code === 0 && json.data) {
+        user.value = json.data
+      } else {
+        // token无效，清除
+        localStorage.removeItem('token')
+      }
+    } catch (e) {
+      console.error('恢复用户状态失败:', e)
+      localStorage.removeItem('token')
+    }
+  }
+})
+
 const raindrops = Array.from({ length: 24 }, (_, idx) => ({
   id: idx,
   delay: (idx % 6) * 0.4,
